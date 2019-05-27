@@ -1,9 +1,7 @@
 ﻿var dgram = require("dgram");
 var server = dgram.createSocket("udp4");
 var fs = require('fs');
-var pg = require('pg');
-//var db = require('db');
-const { Pool, Client } = require('pg')
+const { Pool } = require('pg')
 const connectionString = 'postgresql://postgres:password@127.0.0.1:5432/host'
 const pool = new Pool({ connectionString: connectionString, })
 var tempRead = '';
@@ -20,8 +18,8 @@ server.on("message", function (msg, rinfo) { //every time new data arrives do th
   console.log("temp: " + tempRead + " water: " + meterRead + " msg: " + msg.toString() + " from " + rinfo.address + ":" + rinfo.port); // you can comment this line out
   fs.appendFile('mydata.txt', msg.toString() + crlf, encoding = 'utf8', (err) => {
   });//write the value to file and add CRLF for line break
-  ///get value of sensors, log it to db and process for alerts
 
+  ///get value of sensors, log it to db and process for alerts
   const query = {
     text: 'INSERT INTO temps (reading, time) VALUES ($1, $2) RETURNING *;',
     values: [tempRead, meterRead]
@@ -36,9 +34,7 @@ server.on("message", function (msg, rinfo) { //every time new data arrives do th
         //return 0;
       }
       else {
-        console.log('id' + res.rows[0].smsid) //This gives me the value to console.
-        resolve(res.rows[0].smsid)
-        // return res.rows[0].smsid;
+        //This would be a good place to log a message to the console if required
       }
     })
   })
