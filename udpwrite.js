@@ -1,5 +1,4 @@
-﻿const connString = require('./config');
-var dgram = require("dgram");
+﻿var dgram = require("dgram");
 var server = dgram.createSocket("udp4");
 var fs = require('fs');
 const { Pool } = require('pg')
@@ -14,6 +13,7 @@ crlf[0] = 0xD; //CR - CR character
 crlf[1] = 0xA; //LF - LF character
 
 server.on("message", function (msg, rinfo) { //every time new data arrives do this:
+  var tStart = new Date().getTime();
   var date = new Date;
   var dateFormatted = date.toDateString() + ' ' + date.toLocaleTimeString();
   tempRead = msg.toString().substring(0, 5);
@@ -28,6 +28,9 @@ server.on("message", function (msg, rinfo) { //every time new data arrives do th
     text: 'INSERT INTO temps (reading, time) VALUES ($1, $2);',
     values: [msg.toString(),dateFormatted]
   };
+  //reporting how long it took for the operation to finish.
+  var tEnd = new Date().getTime();
+  console.log("operation took " + Math.abs(tEnd - tStart) + " seconds.");
   return new Promise(function (resolve, reject) {
     
 

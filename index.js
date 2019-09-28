@@ -21,7 +21,7 @@ const queryTime = {
 };
 
 const queryTemp = {
-  text: 'SELECT "time", reading	FROM public.temps ORDER BY time DESC LIMIT 1;'
+  text: 'SELECT "time", reading, id	FROM public.temps ORDER BY id DESC LIMIT 1;'
 };
 
 const getCurrTemp = (request, response) => {
@@ -43,7 +43,7 @@ app.use(
 )
 
 app.get('/', (request, response) => {
-    response.json({ info: 'Node.js, Express, and Postgres API' })
+    response.json({ info: 'Root of express app' })
   })
 
   app.get('/temps', (request, response) => {
